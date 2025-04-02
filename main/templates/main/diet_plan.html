@@ -1,0 +1,71 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="container text-center">
+    <a href="{% url 'diet' %}" class="btn btn-info">Back</a>
+
+    <h2>AI-Based Diet Planner</h2>
+
+    <!-- User Inputs for Height & Weight -->
+    <label for="userHeight"><strong>Height (cm):</strong></label>
+    <input type="number" id="userHeight" class="form-control w-50 mx-auto" placeholder="Enter height in cm">
+
+    <label for="userWeight" class="mt-2"><strong>Weight (kg):</strong></label>
+    <input type="number" id="userWeight" class="form-control w-50 mx-auto" placeholder="Enter weight in kg">
+
+    <!-- Diet Preference -->
+    <label for="preference" class="mt-2"><strong>Diet Preference:</strong></label>
+    <select id="preference" class="form-control w-50 mx-auto">
+        <option value="veg">Vegetarian</option>
+        <option value="non_veg">Non-Vegetarian</option>
+    </select>
+
+    <button onclick="request_diet_plan()" class="btn btn-primary mt-3">Generate AI Diet Plan</button>
+
+    <h3 class="mt-4">Generated Diet Plan:</h3>
+    <pre id="dietPlanResult" class="border p-3 bg-light"></pre>
+</div>
+
+<script>
+    function request_diet_plan() {
+        let height = document.getElementById("userHeight").value;
+        let weight = document.getElementById("userWeight").value;
+        let preference = document.getElementById("preference").value;
+
+        // Input Validation
+        if (!height || !weight || height <= 0 || weight <= 0) {
+            alert("Please enter valid height and weight.");
+            return;
+        }
+
+        fetch('/request-diet/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ height, weight, preference })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert("Error: " + data.error);
+            } else {
+                setTimeout(fetch_diet_plan, 5000);  // Fetch diet plan after 5 seconds
+            }
+        });
+    }
+
+    function fetch_diet_plan() {
+        fetch('/fetch-diet/')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "No messages in queue") {
+                document.getElementById("dietPlanResult").innerText = "No new diet plans available.";
+            } else {
+                document.getElementById("dietPlanResult").innerText = JSON.stringify(data.diet_plan, null, 2);
+            }
+        })
+        .catch(error => {
+            document.getElementById("dietPlanResult").innerText = "Error fetching diet plan.";
+        });
+    }
+</script>
+{% endblock %}

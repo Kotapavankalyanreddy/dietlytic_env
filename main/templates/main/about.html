@@ -1,0 +1,27 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="container text-center">
+    <div class="d-flex justify-content-between mt-4">
+        <a href="{% url 'dashboard' %}" class="btn btn-primary">Back to Dashboard</a>
+        <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+    </div>
+
+    <h2 class="mt-4">User Profile</h2>
+
+    {% if about_page %}
+        <p><strong>Name:</strong> {{ about_page.name }}</p>
+        <p><strong>Date of Birth:</strong> {{ about_page.date_of_birth }}</p>
+        <p><strong>Height:</strong> <span id="userHeight">{{ about_page.height }}</span> cm</p>
+        <p><strong>Weight:</strong> <span id="userWeight">{{ about_page.weight }}</span> kg</p>
+        <p><strong>Mobile Number:</strong> {{ about_page.mobile_number }}</p>
+    {% else %}
+        <p>No profile information available.</p>
+    {% endif %}
+
+    <div class="mt-4 d-flex justify-content-between">
+        <a href="{% url 'edit_about' %}" class="btn btn-warning">Edit Profile</a>
+        <a href="{% url 'home' %}" class="btn btn-secondary">Back to Home</a>
+    </div>
+</div>
+{% endblock %}

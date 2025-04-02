@@ -1,0 +1,14 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container text-center">
+    <img src="{% static 'main/images/logo.jpg' %}" alt="Dietlytic Logo" class="invert-logo" style="width: 150px; height: auto;">
+    <h1 class="mt-5">Welcome to Dietlytic</h1>
+    <p>Track your health, diet, and fitness goals easily.</p>
+
+    <div class="mt-4">
+        <a href="{% url 'login' %}" class="btn btn-primary">Get Started</a>
+    </div>
+</div>
+{% endblock %}

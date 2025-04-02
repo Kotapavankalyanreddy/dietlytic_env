@@ -1,0 +1,94 @@
+{% extends 'main/base.html' %}
+{% block content %}
+<div class="container">
+    <div class="mt-4 d-flex justify-content-between">
+        <a href="{% url 'about' %}" class="btn btn-info">About</a>
+        <a href="{% url 'dashboard' %}" class="btn btn-primary">Back to Dashboard</a>
+        <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+    </div>
+    
+    <h2 class="text-center">Activity Planner</h2>
+
+    <!-- Daily Meal Tracking -->
+    <div class="card p-3 shadow-lg">
+        <h4>Daily Meal Tracking</h4>
+        <ul class="list-group">
+            {% for meal in meals %}
+                <li class="list-group-item">{{ meal.meal_details }}</li>
+            {% empty %}
+                <li class="list-group-item">No meals recorded today.</li>
+            {% endfor %}
+        </ul>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="meal_details" placeholder="Enter Meal Name" class="form-control" required>
+            <button type="submit" name="meal_form" class="btn btn-success mt-2">Add Meal</button>
+        </form>
+        
+    </div>
+
+    <!-- Water Intake Monitoring -->
+    <div class="card p-3 mt-4 shadow-lg">
+        <h4>Water Intake Monitoring</h4>
+        <p>You have consumed <strong>{{ water_intake }}</strong> glasses of water today.</p>
+        <form method="POST">
+            {% csrf_token %}
+            {{ water_form.as_p }}
+            <input type="number" name="water_glasses" placeholder="Enter Number of Glasses" class="form-control" required>
+            <button type="submit" name="water_form" class="btn btn-primary mt-2">Update Water Intake</button>
+        </form>
+    </div>
+
+    <!-- Period Tracker -->
+    <div class="card p-3 mt-4 shadow-lg">
+        <h4>Period Tracker</h4>
+        <p>Last Period Date: <strong>{{ period_tracker.last_period_date }}</strong></p>
+        <p>Cycle Length: <strong>{{ period_tracker.cycle_length }} days</strong></p>
+        <form method="POST">
+            {% csrf_token %}
+            
+            <label for="last_period_date">Last Period Date:</label>
+            <input type="date" name="last_period_date" id="last_period_date" required>
+        
+            <label for="cycle_length">Cycle Length (days):</label>
+            <input type="number" name="cycle_length" id="cycle_length" required>
+        
+            <button type="submit" name="period_form" class="btn btn-danger">Update Period Info</button>
+        </form>
+        
+    </div>
+
+    <!-- Medication Reminders -->
+    <div class="card p-3 mt-4 shadow-lg">
+        <h4>Medication Reminders</h4>
+        <ul class="list-group">
+            {% for med in medication_reminders %}
+                <li class="list-group-item">{{ med.medication_name }} at {{ med.time }} - {{ med.dosage }}</li>
+            {% empty %}
+                <li class="list-group-item">No medication reminders set.</li>
+            {% endfor %}
+        </ul>
+        <form method="POST">
+            {% csrf_token %}
+            {{ med_form.as_p }}
+            <input type="text" name="medication_name" placeholder="Medication Name" class="form-control" required>
+            <input type="time" name="medication_time" class="form-control mt-2" required>
+            <input type="text" name="dosage" placeholder="Dosage" class="form-control mt-2" required>
+            
+            <button type="submit" name="med_form" class="btn btn-warning mt-2">Add Medication</button>
+        </form>
+    </div>
+
+    <!-- Sleep Monitoring -->
+    <div class="card p-3 mt-4 shadow-lg">
+        <h4>Sleep Monitoring</h4>
+        <p>Last night's sleep: <strong>{{ sleep_hours }}</strong> hours</p>
+        <form method="POST">
+            {% csrf_token %}
+            {{ sleep_form.as_p }}
+            <input type="number" name="sleep_hours" placeholder="Hours Slept" class="form-control" required>
+            <button type="submit" name="sleep_form" class="btn btn-info mt-2">Update Sleep</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

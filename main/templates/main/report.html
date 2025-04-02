@@ -1,0 +1,25 @@
+
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="mt-4 d-flex justify-content-between">
+        <a href="{% url 'about' %}" class="btn btn-info">About</a>
+        <a href="{% url 'dashboard' %}" class="btn btn-primary">Back to Dashboard</a>
+        <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+    </div>
+    <h2 class="text-center">Health Progress Report</h2>
+
+    <div class="card p-3 shadow-lg">
+        <h4>Overall Health Progress</h4>
+        <p>Weight: <strong>{{ user.weight }} kg</strong></p>
+        <p>Calories Consumed: <strong>{{ total_calories }} kcal</strong></p>
+        <p>Calories Burned: <strong>{{ total_burned_calories }} kcal</strong></p>
+    </div>
+
+    <div class="card p-3 mt-4 shadow-lg">
+        <h4>Physical Progress</h4>
+        <p>Recent Weight Change: <strong>{{ weight_change }} kg</strong></p>
+    </div>
+</div>
+{% endblock %}

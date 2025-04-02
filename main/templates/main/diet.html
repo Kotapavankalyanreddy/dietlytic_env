@@ -1,0 +1,117 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="mt-4 d-flex justify-content-between">
+        <a href="{% url 'about' %}" class="btn btn-info">About</a>
+        <a href="{% url 'dashboard' %}" class="btn btn-primary">Back to Dashboard</a>
+        <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+    </div>
+    
+    <h2 class="text-center">Diet Planner</h2>
+
+    <!-- Today's Meal Plan -->
+    <div class="card p-3 shadow-lg">
+        <h4>Today's Meal Plan</h4>
+        <ul class="list-group">
+            {% for meal in meals %}
+                <li class="list-group-item">{{ meal.meal_details }} - <strong>{{ meal.calorie_count }} Calories</strong></li>
+            {% empty %}
+                <li class="list-group-item">No meals planned for today.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- AI-Based Recipe Suggestions -->
+    <div class="card p-3 mt-4 shadow-lg">
+        <h4>AI-Based Recipe Suggestions</h4>
+        <p>Our AI suggests the best recipes based on your health preferences.</p>
+        <a href="{% url 'diet_plan' %}" class="btn btn-primary">Get Recipe Suggestion</a>
+    </div>
+    
+    <!-- Exercise & Workout Logs with Dropdown -->
+    <div class="card p-3 mt-4 shadow-lg">
+        <h4>Exercise & Workout Logs</h4>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="exercise">Select an Exercise</label>
+                <select id="exerciseDropdown" class="form-control">
+                    <option value="">-- Select an Exercise --</option>
+                    <option value="Running">Running</option>
+                    <option value="Yoga">Yoga</option>
+                    <option value="Weight Lifting">Weight Lifting</option>
+                    <option value="Cycling">Cycling</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group mt-2">
+                <label for="exerciseDetails">Or Enter Your Own</label>
+                <input type="text" class="form-control" id="exerciseInput" name="exerciseDetails" placeholder="Enter exercise details">
+            </div>
+
+            <div class="form-group mt-2">
+                <label for="caloriesBurned">Calories Burned</label>
+                <input type="number" class="form-control" id="caloriesBurned" name="caloriesBurned" placeholder="Enter estimated calories burned">
+            </div>
+
+            <button type="submit" class="btn btn-success mt-2">Save Workout</button>
+        </form>
+
+        <!-- Display Logged Exercises -->
+        <ul class="list-group mt-3">
+            {% for log in exercise_logs %}
+                <li class="list-group-item">{{ log.exercise_details }} - <strong>{{ log.calories_burned }} Calories Burned</strong></li>
+            {% empty %}
+                <li class="list-group-item">No exercise logged for today.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<!-- AI Recipe Fetch & Dropdown Script -->
+<script>
+    async function fetchAIRecipe() {
+        try {
+            const response = await fetch("https://api.spoonacular.com/recipes/random?apiKey=YOUR_API_KEY&number=1");
+            const data = await response.json();
+            const recipe = data.recipes[0].title + " - " + data.recipes[0].summary;
+            document.getElementById("recipeResult").innerHTML = "Try: " + recipe;
+        } catch (error) {
+            document.getElementById("recipeResult").innerHTML = "Failed to load recipe. Try again!";
+        }
+    }
+
+    // Enable Exercise Dropdown OR Manual Entry
+    document.getElementById("exerciseDropdown").addEventListener("change", function() {
+        const selectedValue = this.value;
+        const exerciseInput = document.getElementById("exerciseInput");
+        const caloriesBurned = document.getElementById("caloriesBurned");
+
+        // Auto-fill calories based on selection
+        const calorieMap = {
+            "Running": 400,
+            "Yoga": 150,
+            "Weight Lifting": 250,
+            "Cycling": 300
+        };
+
+        if (selectedValue === "Other") {
+            exerciseInput.style.display = "block";
+            caloriesBurned.value = "";
+        } else {
+            exerciseInput.style.display = "none";
+            exerciseInput.value = "";
+            caloriesBurned.value = calorieMap[selectedValue] || "";
+        }
+    });
+</script>
+
+<style>
+    #exerciseInput {
+        display: none;
+    }
+</style>
+
+{% endblock %}
