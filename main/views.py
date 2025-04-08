@@ -15,6 +15,7 @@ from django.contrib.auth import authenticate, login, logout
 import random
 import json
 from django.views.decorators.csrf import csrf_exempt
+from dietlytic_utils.calorie import calculate_bmr
 
 
 

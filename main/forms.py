@@ -1,6 +1,7 @@
 from django import forms
 from .models import DailyMeal, WaterIntake, PeriodTracker, MedicationReminder, SleepMonitoring, WeightTracking
 from .models import AboutPage
+from dietlytic_utils.validators import is_valid_mobile
 
 class AboutPageForm(forms.ModelForm):
     class Meta:
@@ -11,10 +12,8 @@ class AboutPageForm(forms.ModelForm):
         }
     def clean_mobile_number(self):
         mobile_number = self.cleaned_data.get('mobile_number')
-        if not mobile_number.isdigit():
-            raise forms.ValidationError("Mobile number must contain only digits.")
-        if len(mobile_number) != 10:
-            raise forms.ValidationError("Mobile number must be exactly 10 digits.")
+        if not is_valid_mobile(mobile_number):
+            raise forms.ValidationError("Mobile number must be exactly 10 digits and numeric.")
         return mobile_number
 
 class DailyMealForm(forms.ModelForm):

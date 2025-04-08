@@ -35,7 +35,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="D:\assingments\dietlytic\dietlytic\env311"
+VIRTUAL_ENV="C:\Users\pavan\OneDrive\Documents\GitHub\dietlytic_env\env311"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

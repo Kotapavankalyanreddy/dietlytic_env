@@ -1,4 +1,4 @@
-#!D:\assingments\dietlytic\dietlytic\env311\Scripts\python.exe
+#!C:\Users\pavan\OneDrive\Documents\GitHub\dietlytic_env\env311\scripts\python.exe
 
 import sys
 import json
