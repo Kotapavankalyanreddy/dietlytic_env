@@ -9,6 +9,12 @@
         <form method="post">
             {% csrf_token %}
             
+            {% if form.errors %}
+                <div class="alert alert-danger text-start">
+                    {{ form.errors }}
+                </div>
+            {% endif %}
+
             <div class="mb-3 text-start">
                 <label for="id_username" class="form-label">Username</label>
                 {{ form.username }}
