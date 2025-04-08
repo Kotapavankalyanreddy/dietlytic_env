@@ -37,27 +37,16 @@ def user_login(request):
     return render(request, "registration/login.html", {"form": form})
 
 # Register View 
-from django.db import connection 
-
 def register(request):
-    if request.method == "POST":
+    if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save() 
-            login(request, user)
-            
-          
-            with connection.cursor() as cursor:
-                cursor.execute("""
-                    INSERT INTO auth_user (username, password, email, is_active, date_joined)
-                    VALUES (%s, %s, %s, %s, NOW())
-                """, [user.username, user.password, user.email, True])
-
-            return redirect("login")  # Redirect to dashboard after signup
+            user = form.save()
+            login(request, user)  # Auto login
+            return redirect('home')
     else:
         form = UserCreationForm()
-
-    return render(request, "main/register.html", {"form": form})
+    return render(request, 'main/register.html', {'form': form})
 
 # Logout View
 @login_required
